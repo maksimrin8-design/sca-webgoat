@@ -21,15 +21,15 @@ jobs:
           output-file: sbom.json
 
       # --- SCA (Trivy) ---
-      - name: Run Trivy (Independent)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln'
-          format: 'table'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-          exit-code: '0'
+#      - name: Run Trivy (Independent)
+ #       uses: aquasecurity/trivy-action@master
+  #      with:
+   #       scan-type: 'fs'
+    #      scan-ref: '.'
+     #     scanners: 'vuln'
+      #    format: 'table'
+       #   severity: 'CRITICAL,HIGH,MEDIUM'
+        #  exit-code: '0'
 
       # --- SCA (Grype) ---
       - name: Run Grype (Independent)

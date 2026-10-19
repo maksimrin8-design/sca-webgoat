@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --- SBOM (Syft) ---
+      # --- 1. SBOM (Syft) ---
       - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0
         with:
@@ -20,20 +20,27 @@ jobs:
           format: cyclonedx-json
           output-file: sbom.json
 
-      # --- SCA (Trivy) ---
-#      - name: Run Trivy (Independent)
- #       uses: aquasecurity/trivy-action@master
-  #      with:
-   #       scan-type: 'fs'
-    #      scan-ref: '.'
-     #     scanners: 'vuln'
-      #    format: 'table'
-       #   severity: 'CRITICAL,HIGH,MEDIUM'
-        #  exit-code: '0'
+      # Выводим SBOM в консоль, чтобы ты его увидел
+      - name: Print SBOM to log
+        run: |
+          echo "=== НАЧАЛО SBOM ==="
+          cat sbom.json
+          echo "=== КОНЕЦ SBOM ==="
 
-      # --- SCA (Grype) ---
+      # --- 2. SCA (Trivy) ---
+      - name: Run Trivy (Independent)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln'
+          format: 'table'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          exit-code: '0'
+          offline-scan: 'true' # <--- ГЛАВНОЕ ИСПРАВЛЕНИЕ: не лезем в интернет
+
+      # --- 3. SCA (Grype) ---
       - name: Run Grype (Independent)
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
           grype dir:. -o table || true
-

@@ -20,7 +20,6 @@ jobs:
           format: cyclonedx-json
           output-file: sbom.json
 
-      # Выводим SBOM в консоль, чтобы ты его увидел
       - name: Print SBOM to log
         run: |
           echo "=== НАЧАЛО SBOM ==="
@@ -29,15 +28,9 @@ jobs:
 
       # --- 2. SCA (Trivy) ---
       - name: Run Trivy (Independent)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln'
-          format: 'table'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-          exit-code: '0'
-          offline-scan: 'true' # <--- ГЛАВНОЕ ИСПРАВЛЕНИЕ: не лезем в интернет
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+          trivy fs --scanners vuln --format table --severity CRITICAL,HIGH,MEDIUM . || true
 
       # --- 3. SCA (Grype) ---
       - name: Run Grype (Independent)

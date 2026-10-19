@@ -30,7 +30,8 @@ jobs:
       - name: Run Trivy (Independent)
         run: |
           curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy fs --scanners vuln --format table --severity CRITICAL,HIGH,MEDIUM . || true
+          echo "Запуск Trivy в оффлайн-режиме..."
+          trivy fs --scanners vuln --format table --severity CRITICAL,HIGH,MEDIUM --offline-scan . || true
 
       # --- 3. SCA (Grype) ---
       - name: Run Grype (Independent)

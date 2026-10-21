@@ -27,10 +27,11 @@ jobs:
           path: sbom.json
 
       # --- 2. SCA (Trivy) ---
+      # Игнорируем pom.xml, чтобы не было ошибки 429 от Maven Central
       - name: Run Trivy (JSON output)
         run: |
           curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy fs --scanners vuln --format json --output trivy-results.json . || true
+          trivy fs --scanners vuln --format json --output trivy-results.json --skip-files "**/pom.xml" --skip-dirs "target" . || true
 
       - name: Upload Trivy JSON
         uses: actions/upload-artifact@v4

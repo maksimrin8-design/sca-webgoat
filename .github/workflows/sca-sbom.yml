@@ -21,7 +21,7 @@ jobs:
           output-file: sbom.json
 
       - name: Upload SBOM JSON
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sbom-json
           path: sbom.json
@@ -34,7 +34,7 @@ jobs:
           trivy fs --scanners vuln --format json --output trivy-results.json --skip-files "**/pom.xml" --skip-dirs "target" . || true
 
       - name: Upload Trivy JSON
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-json
           path: trivy-results.json
@@ -46,7 +46,7 @@ jobs:
           grype dir:. -o json > grype-results.json || true
 
       - name: Upload Grype JSON
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: grype-json
           path: grype-results.json
@@ -59,7 +59,7 @@ jobs:
           osv-scanner -r --format json --output osv-results.json ./ || true
 
       - name: Upload OSV JSON
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: osv-json
           path: osv-results.json
